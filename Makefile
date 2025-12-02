@@ -1,8 +1,12 @@
 NAME = cub3d
 
-SRCFILES = main.cpp
+SRCFILES =	get_next_line/get_next_line_utils.c \
+			get_next_line/get_next_line.c \
+			map_grid.c \
+			exit.c \
+			main.c
 
-OBJFILES = $(SRCFILES:.cpp=.o)
+OBJFILES = $(SRCFILES:.c=.o)
 
 CFLAGS = -Wall -Wextra -Werror -g3
 
@@ -17,7 +21,7 @@ CC = cc
 RM = rm -f
 
 $(NAME): $(OBJFILES)
-			$(CC) $(CFLAGS) $(MLXFLAGS) -o $(NAME) $(OBJFILES) $(MLXLIB)
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJFILES) $(MLXLIB) $(MLXFLAGS)
 
 all: $(NAME)
 
