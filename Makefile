@@ -3,6 +3,12 @@ NAME = cub3d
 SRCFILES =	get_next_line/get_next_line_utils.c \
 			get_next_line/get_next_line.c \
 			map_grid.c \
+			camera.c \
+			display.c \
+			movement.c \
+			check_move.c \
+			draw_line.c \
+			move.c \
 			exit.c \
 			main.c
 

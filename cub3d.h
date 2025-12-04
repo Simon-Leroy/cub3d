@@ -8,13 +8,18 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <math.h>
 
 # define W_KEY 119
 # define S_KEY 115
 # define A_KEY 97
 # define D_KEY 100
+# define X_LEFT 65361
+# define X_RIGHT 65363
 
 # define IMG_PX 32
+
+# define PI 3.1415926535
 
 typedef struct s_cell
 {
@@ -23,24 +28,66 @@ typedef struct s_cell
 	char	type;
 }	t_cell;
 
-typedef struct graph
+/* typedef struct s_mlx
 {
 	void	*mlx;
 	void	*win;
 	void	*square;
 	void	*wall;
+}	t_mlx; */
+
+typedef struct s_graph
+{
+	void	*mlx;
+	void	*win;
+	void	*square;
+	void	*wall;
+
 	size_t	height;
 	size_t	width;
 	char	**map;
-	int		x;
-	int		y;
+
+	double		move_speed;
+	double		x;
+	double		y;
+	double		pa;
+	double		pdx;
+	double		pdy;
+	int		grid_x;
+	int		grid_y;
+	int		player_radius;
 	int	is_moving_forward;
 	int	is_moving_backward;
 	int	is_moving_left;
 	int	is_moving_right;
+	int	is_looking_right;
+	int	is_looking_left;
+	double	dirX;
+	double	dirY;
 }	t_graph;
 
 int	exit_game(t_graph *graph);
 char	**create_map_grid(char *map_name);
+int	move_loop(t_graph *graph);
+int	key_press_hook(int key, t_graph *graph);
+int	key_release_hook(int key, t_graph *graph);
+void	draw_line(void *mlx, void *win, int x1, int y1, int x2, int y2, int color);
+
+// display.c
+
+void	redraw_display(t_graph *graph);
+void	display_minimap(t_graph *graph);
+
+// check_move.c
+
+int check_move_left(t_graph *graph, double move_speed);
+int check_move_right(t_graph *graph, double move_speed);
+int check_move_up(t_graph *graph, double move_speed);
+int check_move_down(t_graph *graph, double move_speed);
+
+int	handle_movement(t_graph *graph);
+int handle_rotation(t_graph *graph);
+
+void	update_direction_vectors(t_graph *graph);
 
 #endif
