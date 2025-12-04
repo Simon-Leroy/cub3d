@@ -80,14 +80,17 @@ void	display_minimap(t_graph *graph);
 
 // check_move.c
 
-int check_move_left(t_graph *graph, double move_speed);
-int check_move_right(t_graph *graph, double move_speed);
-int check_move_up(t_graph *graph, double move_speed);
-int check_move_down(t_graph *graph, double move_speed);
+int check_move(t_graph *graph, double dx, double dy);
+int check_move_x(t_graph *graph, double dx);
+int check_move_y(t_graph *graph, double dy);
 
 int	handle_movement(t_graph *graph);
 int handle_rotation(t_graph *graph);
 
 void	update_direction_vectors(t_graph *graph);
+
+// raycaster.c
+
+void	draw_rays(t_graph *graph);
 
 #endif

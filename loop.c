@@ -40,29 +40,6 @@ int	key_release_hook(int key, t_graph *graph)
 	return (0);
 }
 
-/*
-Fonction utilisée pour le mlx_hook_loop
-
-int moved -> indique si le joueur est en mouvement et s'il faut réactualiser les différents affichages
-double move_speed -> le nombre de pixels ajoutés ou déduits de la position du joueur pour le faire bouger
-sur la map
-calculate_grid_position -> indique les coordonnées de la case où se trouve le joueur (dans la grille, pas en pixels)
-
-On checke les différents mouvements en fonction de la touche qui est pressée
-Les fonctions check_move_up/down/etc servent à repérer les murs et empêcher le joueur d'avancer en cas de collision
-
-Pour la gestion de la caméra, pa correspond à l'angle du joueur en radians
--a 0 (radians), le joueur regarde à droite (vecteur de vision parallèle à l'axe des x)
--a pi, le joueur regarde à gauche
--a pi / 2, le joueur regarde tout en haut,
--a 3 pi / 2, le joueur regarde tout en bas
-(voir cercle trigonométrique)
-Si le joueur regarde vers la droite, on soustrait à l'angle, sinon on ajoute (cf le cercle trigo)
- */
-
-
-
-
 int	move_loop(t_graph *graph)
 {
 	int	moved;
@@ -71,12 +48,13 @@ int	move_loop(t_graph *graph)
 	moved = handle_movement(graph);
 	rotated = handle_rotation(graph);
 	if (moved || rotated)
-	{
+		redraw_display(graph);
+/* 	{
 		mlx_clear_window(graph->mlx, graph->win);
 		display_minimap(graph);
 		mlx_put_image_to_window(graph->mlx, graph->win, graph->square, graph->x - graph->player_radius, graph->y - graph->player_radius);
 		draw_line(graph->mlx, graph->win, graph->x, graph->y, graph->x + graph->pdx, graph->y + graph->pdy, 0xFF0000);
-	}
+	} */
 	return (0);
 }
 

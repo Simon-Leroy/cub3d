@@ -2,42 +2,98 @@
 
 int	move_forward(t_graph *graph)
 {
+	double	dx;
+	double	dy;
+	int		moved;
+
 	if (!graph->is_moving_forward)
 		return (0);
-	if (!check_move_up(graph, graph->move_speed))
-		return (0);
-	graph->y -= graph->move_speed;
-	return (1);
+	dx = graph->dirX * graph->move_speed;
+	dy = graph->dirY * graph->move_speed;
+	moved = 0;
+	if (check_move_x(graph, dx))
+	{
+		graph->x += dx;
+		moved = 1;
+	}
+	if (check_move_y(graph, dy))
+	{
+		graph->y += dy;
+		moved = 1;
+	}
+	return (moved);
 }
 
 int	move_backward(t_graph *graph)
 {
+	double	dx;
+	double	dy;
+	int		moved;
+
 	if (!graph->is_moving_backward)
 		return (0);
-	if (!check_move_down(graph, graph->move_speed))
-		return (0);
-	graph->y += graph->move_speed;
-	return (1);
+	dx = -graph->dirX * graph->move_speed;
+	dy = -graph->dirY * graph->move_speed;
+	moved = 0;
+	if (check_move_x(graph, dx))
+	{
+		graph->x += dx;
+		moved = 1;
+	}
+	if (check_move_y(graph, dy))
+	{
+		graph->y += dy;
+		moved = 1;
+	}
+	return (moved);
 }
 
 int	move_left(t_graph *graph)
 {
+	double	dx;
+	double	dy;
+	int		moved;
+
 	if (!graph->is_moving_left)
 		return (0);
-	if (!check_move_left(graph, graph->move_speed))
-		return (0);
-	graph->x -= graph->move_speed;
-	return (1);
+	dx = graph->dirY * graph->move_speed;
+	dy = -graph->dirX * graph->move_speed;
+	moved = 0;
+	if (check_move_x(graph, dx))
+	{
+		graph->x += dx;
+		moved = 1;
+	}
+	if (check_move_y(graph, dy))
+	{
+		graph->y += dy;
+		moved = 1;
+	}
+	return (moved);
 }
 
 int	move_right(t_graph *graph)
 {
+	double	dx;
+	double	dy;
+	int		moved;
+
 	if (!graph->is_moving_right)
 		return (0);
-	if (!check_move_right(graph, graph->move_speed))
-		return (0);
-	graph->x += graph->move_speed;
-	return (1);
+	dx = -graph->dirY * graph->move_speed;
+	dy = graph->dirX * graph->move_speed;
+	moved = 0;
+	if (check_move_x(graph, dx))
+	{
+		graph->x += dx;
+		moved = 1;
+	}
+	if (check_move_y(graph, dy))
+	{
+		graph->y += dy;
+		moved = 1;
+	}
+	return (moved);
 }
 
 int	handle_movement(t_graph *graph)
