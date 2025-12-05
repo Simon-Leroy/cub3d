@@ -49,12 +49,6 @@ int	move_loop(t_graph *graph)
 	rotated = handle_rotation(graph);
 	if (moved || rotated)
 		redraw_display(graph);
-/* 	{
-		mlx_clear_window(graph->mlx, graph->win);
-		display_minimap(graph);
-		mlx_put_image_to_window(graph->mlx, graph->win, graph->square, graph->x - graph->player_radius, graph->y - graph->player_radius);
-		draw_line(graph->mlx, graph->win, graph->x, graph->y, graph->x + graph->pdx, graph->y + graph->pdy, 0xFF0000);
-	} */
 	return (0);
 }
 

@@ -17,7 +17,7 @@ int main()
 	graph->y = 2 * IMG_PX + graph->player_radius;
 	graph->wall = mlx_xpm_file_to_image(graph->mlx, "assets/walls.xpm", &size, &size);
 	graph->map = create_map_grid("map.cub");
-	graph->pa = PI / 2;
+	graph->pa = PI / 3; // attention problème de boucle infinie avec le raycasting
 	graph->move_speed = 0.2;
 	mlx_hook(graph->win, 2, 1L<<0, key_press_hook, graph);
 	mlx_hook(graph->win, 3, 1L<<1, key_release_hook, graph);
