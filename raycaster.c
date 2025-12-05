@@ -7,16 +7,26 @@
 #define PI 3.1415926535
 #define P2 PI / 2
 #define P3 3*PI / 2
-#define DR 0.0274533 // un degré en radians
-#define LARGEUR_ECRAN 960
-#define DPA 277 // distance de projection
+#define DR 0.0274533
 
-
+#define WIDTH 30 * 32
+#define HEIGHT 16 * 32
 
 float	dist(float ax, float ay, float bx, float by)
 {
 	return (sqrt((bx - ax) * (bx - ax) + (by - ay) * (by - ay))); // formule de la norme d'un vecteur
 }
+
+/* void	img_pixel_put(t_img *img, int x, int y, unsigned int color)
+{
+	unsigned int *pixel;
+
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return;
+	pixel = (unsigned int *)(img->addr
+			+ y * img->line_len + x * (img->bpp / 8));
+	*pixel = color;
+} */
 
 
 
@@ -36,11 +46,12 @@ void	draw_rays(t_graph *graph)
 	float nTan; // pour calculer les intersections verticales
 	float disH;
 	float disV;
-//	float disT;
+	float disT;
 	float hx;
 	float hy;
 	float vx;
 	float vy;
+	int	color;
 
 	ra = graph->pa - DR * 30;
 	if (ra < 0)
@@ -156,37 +167,35 @@ void	draw_rays(t_graph *graph)
 		{
 			rx = hx;
 			ry = hy;
-//			disT = disH;
+			disT = disH;
+			color = 0xB03119;
 		}
 		if (disV < disH)
 		{
 			rx = vx;
 			ry = vy;
-//			disT = disV;
+			disT = disV;
+			color = 0xFF2900;
 		}
-		draw_line(graph->mlx, graph->win, graph->x, graph->y, rx, ry, 0xFF0000);
+//		draw_line(graph->mlx, graph->win, graph->x, graph->y, rx, ry, 0xFF0000);
 
 		// --- DESSIN DE LA SCENE 3D ---
-/* 		float ca = graph->pa - ra; // Calcul de la différence d'angle
+
+		float ca = graph->pa - ra;
 		if (ca < 0)
 			ca += 2 * PI;
 		if (ca > 2 * PI)
 			ca -= 2 * PI;
-		float distance_corrigee = disT * cos(ca);
-		float hauteur_mur = (IMG_PX / distance_corrigee) * DPA;
-		int ligne_mur_hauteur = (int)hauteur_mur;
-		int ligne_depart = (512 / 2) - (ligne_mur_hauteur / 2);
-		int ligne_fin = (512 / 2) + (ligne_mur_hauteur / 2);
-		if (ligne_depart < 0)
-			ligne_depart = 0;
-		if (ligne_fin > 512)
-			ligne_fin = 512;
-		 */
-
-
-
-
-
+		disT = disT * cos(ca);
+		float lineH = (IMG_PX * HEIGHT) / disT;  // hauteur proportionnelle à la distance
+		if (lineH > HEIGHT)
+			lineH = HEIGHT;
+		int y_depart = (HEIGHT / 2) - (lineH / 2);
+		int y_fin = y_depart + lineH;
+		int col_width = WIDTH / 60;
+		int x_colonne = r * col_width;
+		for (int x = 0; x < col_width; x++)
+			draw_line(graph->mlx, graph->win, x_colonne + x, y_depart, x_colonne + x, y_fin, color);
 
 
 		ra += DR;
@@ -196,158 +205,3 @@ void	draw_rays(t_graph *graph)
 			ra -= 2 * PI;
 	}
 }
-
-/* void	draw_rays(t_graph *graph)
-{
-	int	r; // Index Ray -> donne le nombre de rayons émis par le joueur
-	int mx; // coordonnée x dans la grille
-	int my; // coordonnée y dans la grille
-//	int mp; // position dans le tableau 1D (inutile dans notre cas?)
-	int dof; // depth of field -> empêche le rayon de traverser toute la carte, compte le nombre de murs/cases vérifiées
-	float rx; // coordonnée x du point d'impact du rayon dans le canvas
-	float ry; // coordonnée y du point d'impact du rayon dans le canvas
-	float ra; // angle du rayon
-	float xo; // offset utilisé pour passer d'une ligne de la carte à la suivante
-	float yo; // offset
-	float aTan; // tangente négative inversée utilisé pour calculer les intersections horizontales
-	float nTan; // pour calculer les intersections verticales
-	float disH = 1000000;
-	float disV = 1000000;
-	float hx;
-	float hy;
-	float vx;
-	float vy;
-
-	hx = graph->x;
-	hy = graph->y;
-	ra = graph->pa - DR * 30;
-	if (ra < 0)
-		ra += 2 * PI;
-	if (ra > 2 * PI)
-		ra -= 2 * PI;
-	for (r = 0; r < 60; r++) // boucle pour lancer les rayons
-	{
-		// --- CHECK LIGNES HORIZONTALES ---
-		dof = 0; // on réinitialise à 0 à chaque boucle (aucun mur ou case vérifiés)
-		aTan = -1 / tan(ra);
-		if (ra > PI) // le rayon est orienté vers le bas
-		{
-			ry = (((int)graph->y / IMG_PX) * IMG_PX) - 0.0001;
-			// (int)graph->y / IMG_PX -> donne la coordonnée y dans la grille
-			// on remultiplie par IMG_PX pour avoir la bonne coordonnée dans le canvas
-			// puis on soustrait pour avoir la liste juste au dessus
-			rx = (graph->y - ry) * aTan + graph->x;
-			// graph->y - ry donne la hauteur du triangle formé par le joueur et le point (rx, ry) = distance verticale parcourue par le rayon
-			// en multipliant par aTan on obtient la distance horizontale parcourue (= côté adjacent du triangle)
-			// on ajoute la position de départ du joueur pour la position du triangle et donc la position de rx
-			yo = -IMG_PX; // si le rayon descend, l'offset est négatif
-			xo = -yo * aTan;
-		}
-		else if (ra < PI) // le rayon est orienté vers le haut
-		{
-			ry = (((int)graph->y / IMG_PX) * IMG_PX) + IMG_PX; // pour avoir la coordonnée de la ligne horizontale supérieure (+ IMG_PX ou +0.0001?)
-			rx = (graph->y - ry) * aTan + graph->x;
-			yo = IMG_PX;
-			xo = -yo * aTan;
-		}
-		else if (ra == 0 || ra == PI) // le rayon est orienté vers la gauche ou la droite (parallèle aux abscisses), évite les divisions par 0
-		{
-			rx = graph->x;
-			ry = graph->y;
-			dof = 8;
-		}
-		while (dof < 15)
-		{
-			mx = (int)rx / IMG_PX; // coordonnées du rayon dans la grille
-			my = (int)ry / IMG_PX;
-			if (mx < 0 || my < 0 || mx >= 30 || my >= 16)
-				break;
-			if (mx >= 0 && my >= 0 && mx < 30 && my < 16 && graph->map[my][mx] == '1')
-			{
-				hx = rx;
-				hy = ry;
-				disH = dist(graph->x, graph->y, hx, hy);
-				dof = 8; // on arrête la boucle (break plutôt?)
-			}
-			else
-			{
-				// l'angle ra ne change pas donc il y a juste a ajouter l'offset pour vérifier la ligne suivante
-				rx += xo;
-				ry += yo;
-				dof++;
-			}
-		}
-
-		// --- CHECK LIGNES VERTICALES ---
-		vx = graph->x;
-		vy = graph->y;
-		dof = 0;
-		nTan = -tan(ra);
-		if (ra > P2 && ra < P3) // le rayon est orienté vers la droite
-		{
-			rx = (((int)graph->x / IMG_PX) * IMG_PX) - 0.0001;
-			ry = (graph->x - rx) * nTan + graph->y;
-			xo = -IMG_PX; // si le rayon descend, l'offset est négatif
-			yo = -xo * nTan;
-		}
-		else if (ra < P2 || ra > P3) // le rayon est orienté vers la gauche
-		{
-			rx = (((int)graph->x / IMG_PX) * IMG_PX) + IMG_PX; // pour avoir la coordonnée de la ligne horizontale supérieure (+ IMG_PX ou +0.0001?)
-			ry = (graph->x - rx) * nTan + graph->y;
-			xo = IMG_PX;
-			yo = -xo * nTan;
-		}
-		else if (ra == P2 || ra == P3) // le rayon est orienté vers la gauche ou la droite (parallèle aux abscisses), évite les divisions par 0
-		{
-			rx = graph->x;
-			ry = graph->y;
-			dof = 8;
-		}
-		else if (ra == 0 || ra == PI) // le rayon est orienté vers la gauche ou la droite (parallèle aux abscisses), évite les divisions par 0
-		{
-			rx = graph->x;
-			ry = graph->y;
-			dof = 8;
-		}
-		while (dof < 15)
-		{
-			mx = (int)rx / IMG_PX; // coordonnées du rayon dans la grille
-			my = (int)ry / IMG_PX;
-			if (mx < 0 || my < 0 || mx >= 30 || my >= 16)
-				break;
-			if (mx >= 0 && my >= 0 && mx < 30 && my < 16 && graph->map[my][mx] == '1')
-			{
-				vx = rx;
-				vy = ry;
-				disV = dist(graph->x, graph->y, vx, vy);
-				dof = 8; // on arrête la boucle (break plutôt?)
-			}
-			else
-			{
-				// l'angle ra ne change pas donc il y a juste a ajouter l'offset pour vérifier la ligne suivante
-				rx += xo;
-				ry += yo;
-				dof++;
-			}
-		}
-		if (disH < disV)
-		{
-			rx = hx;
-			ry = hy;
-		}
-		if (disV < disH)
-		{
-			rx = vx;
-			ry = vy;
-		}
-		draw_line(graph->mlx, graph->win, graph->x, graph->y, rx, ry, 0xFF0000);
-		ra += DR;
-		if (ra < 0)
-			ra += 2 * PI;
-		if (ra > 2 * PI)
-			ra -= 2 * PI;
-	}
-} */
-
-
-

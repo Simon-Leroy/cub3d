@@ -12,7 +12,7 @@ int	look_left(t_graph *graph)
 {
 	if (!graph->is_looking_left)
 		return (0);
-	graph->pa -= 0.01;
+	graph->pa -= 0.05;
 	if (graph->pa < 0)
 		graph->pa += 2 * PI;
 	update_direction_vectors(graph);
@@ -23,7 +23,7 @@ int	look_right(t_graph *graph)
 {
 	if (!graph->is_looking_right)
 		return (0);
-	graph->pa += 0.01;
+	graph->pa += 0.05;
 	if (graph->pa > 2 * PI)
 		graph->pa -= 2 * PI;
 	update_direction_vectors(graph);

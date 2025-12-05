@@ -66,6 +66,15 @@ typedef struct s_graph
 	double	dirY;
 }	t_graph;
 
+typedef struct s_img
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}	t_img;
+
 int	exit_game(t_graph *graph);
 char	**create_map_grid(char *map_name);
 int	move_loop(t_graph *graph);
