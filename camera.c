@@ -2,8 +2,6 @@
 
 void	update_direction_vectors(t_player *player)
 {
-/* 	player->pdx = cos(graph->pa) * 5;
-	player->pdy = sin(graph->pa) * 5; */
 	player->dirX = cos(player->pa);
 	player->dirY = sin(player->pa);
 }
@@ -12,7 +10,7 @@ int	look_left(t_player *player)
 {
 	if (!player->is_looking_left)
 		return (0);
-	player->pa -= 0.05;
+	player->pa -= player->rotation_speed;
 	if (player->pa < 0)
 		player->pa += 2 * PI;
 	update_direction_vectors(player);
@@ -23,7 +21,7 @@ int	look_right(t_player *player)
 {
 	if (!player->is_looking_right)
 		return (0);
-	player->pa += 0.05;
+	player->pa += player->rotation_speed;
 	if (player->pa > 2 * PI)
 		player->pa -= 2 * PI;
 	update_direction_vectors(player);

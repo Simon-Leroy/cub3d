@@ -12,6 +12,7 @@ SRCFILES =	get_next_line/get_next_line_utils.c \
 			horizontal_rays.c \
 			vertical_rays.c \
 			raycaster.c \
+			render.c \
 			loop.c \
 			exit.c \
 			main.c

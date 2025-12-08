@@ -54,7 +54,7 @@ int	move_loop(t_graph *graph)
 	moved = handle_movement(graph, graph->player);
 	rotated = handle_rotation(graph->player);
 	if (moved || rotated)
-		redraw_display(graph, graph->player);
+		render_frame(graph);
 	return (0);
 }
 

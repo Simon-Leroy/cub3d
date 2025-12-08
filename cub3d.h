@@ -20,21 +20,16 @@
 # define IMG_PX 32
 
 # define PI 3.1415926535
-# define P2 PI / 2
-# define P3 3*PI / 2
+# define P2 (PI / 2)
+# define P3 (3*PI / 2)
 
-# define DR 0.0274533
+# define DR 0.0174533 // 1 degré en radians
 
-# define WIDTH 30 * 32
-# define HEIGHT 16 * 32
+# define WIDTH (30 * 32)
+# define HEIGHT (16 * 32)
 
-/* typedef struct s_mlx
-{
-	void	*mlx;
-	void	*win;
-	void	*square;
-	void	*wall;
-}	t_mlx; */
+# define FOV (60.0f * DR)
+
 typedef struct s_player
 {
 	double	px;
@@ -73,6 +68,27 @@ typedef struct s_ray
 	float	distV;
 }	t_ray;
 
+/*
+Structure pour dessiner tous les pixels hors écran puis les afficher
+d'un seul coup
+
+-*img_ptr : pointeur vers l'image, pour l'afficher ou la détruire
+-*data_addr : pointeur vers le buffer de pixels où sont stockées toutes
+les couleurs de tous les pixels de l'image affichée
+-bits_per_pixel : bits utilisés pour représenter la couleur des pixels
+-line_len : nombre d'octets utilisés une ligne horizontale complète
+-endian : indique l'ordre dans lequel les octets sont stockés pour un
+même pixel
+ */
+typedef struct s_img
+{
+	void	*img_ptr;
+	char	*data_addr;
+	int		bits_per_pixel;
+	int		line_len;
+	int		endian;
+}	t_img;
+
 
 typedef struct s_graph
 {
@@ -80,24 +96,12 @@ typedef struct s_graph
 	void	*win;
 	void	*square;
 	void	*wall;
-
-	t_player *player;
-
+	char	**map;
+	t_player	*player;
+	t_img		img;
 	size_t	height;
 	size_t	width;
-	char	**map;
 }	t_graph;
-
-
-
-typedef struct s_img
-{
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}	t_img;
 
 int	exit_game(t_graph *graph);
 char	**create_map_grid(char *map_name);
@@ -139,4 +143,9 @@ void	hit_v_wall(t_ray *ray, t_graph *graph, t_player *player);
 float	normalise_angle(float angle);
 float	dist(float ax, float ay, float bx, float by);
 
+// render
+void	ft_pixel_put(t_img *img, int x, int y, int color);
+
+void	init_image(t_graph *graph);
+int		render_frame(t_graph *graph);
 #endif
