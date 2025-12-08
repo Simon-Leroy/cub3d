@@ -8,6 +8,9 @@ SRCFILES =	get_next_line/get_next_line_utils.c \
 			movement.c \
 			check_move.c \
 			draw_line.c \
+			utils.c \
+			horizontal_rays.c \
+			vertical_rays.c \
 			raycaster.c \
 			loop.c \
 			exit.c \
