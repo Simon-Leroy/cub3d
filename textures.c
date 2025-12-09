@@ -1,11 +1,15 @@
 #include "cub3d.h"
+
 /*
 On load une texture
+mlx_xpm_file_to_image : ouvre le fichier en path, crée une image mlx,
+renseigne la taille de l'image dans *width et dans *height
+
 mlx_get_data_addr renvoie l'adresse de début du buffer
 où sont stockés les pixels de la texture
 */
 
-int	load_texture(void *mlx, t_tex *tex, char *path)
+int	load_textures(void *mlx, t_tex *tex, char *path)
 {
 	tex->img = mlx_xpm_file_to_image(mlx, path, &tex->width, &tex->height);
 	if (!tex->img)

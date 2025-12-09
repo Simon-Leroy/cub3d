@@ -101,11 +101,18 @@ void draw_ray_column(t_graph *graph, t_ray *ray, int r, double dist, int color)
 	lineH = (IMG_PX * HEIGHT) / dist;
 	y_start = (HEIGHT / 2.0f) - (lineH / 2.0f);
 	y_end = y_start + lineH;
+
+/* 	wall_x : extrait la partie décimale de la position d'impact du rayon sur le mur
+	ray->hit_x  / IMG_PX convertit la coordonnée d'impact en cases de textures (41.27 par exemple)
+	- floor(ray->hit_x / IMG_PX) -> enlève la partie entière -> wall_x = 0.27
+	Donc le rayon touche le mur à 27% du mur
+	On multiplie par la largeur de la texture et on sait dans quelle colonne de la texture
+	on doit aller prélever le pixel à imprimer = texture sampling
+	*/
 	if (ray->side == 0)
 		wall_x = ray->hit_x / IMG_PX - floor(ray->hit_x / IMG_PX);
 	else
 		wall_x = ray->hit_y / IMG_PX - floor(ray->hit_y / IMG_PX);
-
 	tex_x = (int)(wall_x * tex->width);
 	y = 0;
 	while (y < y_start)
