@@ -20,13 +20,7 @@ void ft_pixel_put(t_img *img, int x, int y, int color)
 
 	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
-		// 1. Calcul de l'offset du pixel
-		// line_length est la taille en octets d'une ligne entière (WIDTH * bpp / 8)
-		// bpp / 8 est le nombre d'octets par pixel (ex: 4 octets pour 32 bits)
 		dst = img->data_addr + (y * img->line_len + x * (img->bits_per_pixel / 8));
-
-		// 2. Écriture de la couleur
-		// On suppose ici que la couleur est stockée dans un int (4 octets)
 		*(unsigned int*)dst = color;
 	}
 }
