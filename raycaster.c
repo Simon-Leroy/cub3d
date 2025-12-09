@@ -1,7 +1,7 @@
 #include "cub3d.h"
 
 // initialisation du rayon pour un angle donné
-void init_ray(t_ray *ray, t_player *player, float ra)
+void init_ray(t_ray *ray, t_player *player, double ra)
 {
 	ray->ra = ra;
 	ray->distH = 1000000;
@@ -26,18 +26,32 @@ Le raycasting se fait en deux temps et récupère deux distances : la surface ho
 touchée par le rayon et la surface verticale
 Cette fonction détermine le point d'impact le plus proche parmi les deux surfaces
 */
-void	get_ray_impact(t_player *player, t_ray *ray, float *dist, int *color)
+void	get_ray_impact(t_player *player, t_ray *ray, double *dist, int *color)
 {
-	float	ca;
+	double	ca;
 	if (ray->distH < ray->distV)
 	{
 		*dist = ray->distH;
 		*color = 0xB03119;
+		ray->hit_x = ray->hx;
+		ray->hit_y = ray->hy;
+		ray->side = 0;
+		if (ray->ra > 0 && ray->ra < PI)
+			ray->wall_cardinal = 'N';
+		else
+			ray->wall_cardinal = 'S';
 	}
 	else
 	{
 		*dist = ray->distV;
 		*color = 0xFF2900;
+		ray->hit_x = ray->vx;
+		ray->hit_y = ray->vy;
+		ray->side = 1;
+		if (ray->ra > P2 && ray->ra < P3)
+			ray->wall_cardinal = 'W';
+		else
+			ray->wall_cardinal = 'E';
 	}
 	ca = normalise_angle(player->pa - ray->ra);
 	*dist *= cos(ca); // correction fish-eye
@@ -63,17 +77,36 @@ donc le mur occupera autant de pixels en dessous et au dessus du milieu du canva
 -du mur entre y_start et y_end
 -du sol entre y_end et le bas du canvas (donc HEIGHT)
  */
-void draw_ray_column(t_graph *graph, int r, float dist, int color)
+void draw_ray_column(t_graph *graph, t_ray *ray, int r, double dist, int color)
 {
-	float	lineH;
-	float	y_start;
-	float	y_end;
+	double	lineH;
+	double	y_start;
+	double	y_end;
 	int		y;
 	int		x_colonne = r;
+	int		tex_x;
+	int		tex_y;
+	double	tex_pos;
+	double	wall_x;
+	t_tex	*tex;
 
+	if (ray->wall_cardinal == 'N')
+		tex = &graph->tex[0];
+	else if (ray->wall_cardinal == 'S')
+		tex = &graph->tex[1];
+	else if (ray->wall_cardinal == 'E')
+		tex = &graph->tex[2];
+	else
+		tex = &graph->tex[3];
 	lineH = (IMG_PX * HEIGHT) / dist;
 	y_start = (HEIGHT / 2.0f) - (lineH / 2.0f);
-	y_end   = y_start + lineH;
+	y_end = y_start + lineH;
+	if (ray->side == 0)
+		wall_x = ray->hit_x / IMG_PX - floor(ray->hit_x / IMG_PX);
+	else
+		wall_x = ray->hit_y / IMG_PX - floor(ray->hit_y / IMG_PX);
+
+	tex_x = (int)(wall_x * tex->width);
 	y = 0;
 	while (y < y_start)
 	{
@@ -82,6 +115,9 @@ void draw_ray_column(t_graph *graph, int r, float dist, int color)
 	}
 	while (y < y_end)
 	{
+		tex_pos = (double)(y - y_start) / lineH;
+		tex_y = (int)(tex_pos * tex->height);
+		color = get_pixel_tex(tex, tex_x, tex_y);
 		ft_pixel_put(&graph->img, x_colonne, y, color);
 		y++;
 	}
@@ -93,13 +129,13 @@ void draw_ray_column(t_graph *graph, int r, float dist, int color)
 }
 
 
-void cast_ray(t_graph *graph, t_player *player, float pa)
+void cast_ray(t_graph *graph, t_player *player, double pa)
 {
 	t_ray	ray;
-	float	ra;
-	float	dist;
+	double	ra;
+	double	dist;
 	int		color;
-	float	angle_step;
+	double	angle_step;
 
 	angle_step = FOV / WIDTH;
 	for (int r = 0; r < WIDTH; r++)
@@ -109,7 +145,7 @@ void cast_ray(t_graph *graph, t_player *player, float pa)
 		init_ray(&ray, player, ra);
 		cast_single_ray(graph, player, &ray);
 		get_ray_impact(player, &ray, &dist, &color);
-		draw_ray_column(graph, r, dist, color);
+		draw_ray_column(graph, &ray, r, dist, color);
 	}
 }
 /*
@@ -117,7 +153,7 @@ void cast_ray(t_graph *graph, t_player *player, float pa)
 void draw_rays_minimap(t_graph *graph)
 {
 	t_ray ray;
-	float ra;
+	double ra;
 	int r;
 	int color;
 

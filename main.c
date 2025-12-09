@@ -7,6 +7,7 @@ int main()
 	int		size;
 
 	size = 32;
+
 	graph = malloc(sizeof(t_graph));
 	if (!graph)
 		return (1);
@@ -14,6 +15,7 @@ int main()
 	graph->win = mlx_new_window(graph->mlx, 30 * IMG_PX, 16 * IMG_PX, "CUB3D");
 	graph->square = mlx_xpm_file_to_image(graph->mlx, "assets/square.xpm", &size, &size);
 	init_image(graph);
+
 	player = malloc(sizeof(t_player));
 	if (!player)
 		return (1);
@@ -22,10 +24,22 @@ int main()
 	player->rotation_speed = 0.01;
 	player->px = 2 * IMG_PX + player->radius;
 	player->py = 2 * IMG_PX + player->radius;
-	graph->wall = mlx_xpm_file_to_image(graph->mlx, "assets/walls.xpm", &size, &size);
-	graph->map = create_map_grid("map.cub");
 	player->pa = PI / 3; // attention problème de boucle infinie avec le raycasting
 	player->move_speed = 0.8;
+
+	graph->tex_path[0] = strdup("assets/north.xpm");
+	graph->tex_path[1] = strdup("assets/south.xpm");
+	graph->tex_path[2] = strdup("assets/east.xpm");
+	graph->tex_path[3] = strdup("assets/west.xpm");
+	for (int i = 0; i < 4; i++)
+	{
+		if (load_texture(graph->mlx, &graph->tex[i], graph->tex_path[i]))
+			printf("Erreur chargement texture %s\n", graph->tex_path[i]);
+	}
+
+	graph->wall = mlx_xpm_file_to_image(graph->mlx, "assets/walls.xpm", &size, &size);
+	graph->map = create_map_grid("map.cub");
+
 	mlx_hook(graph->win, 2, 1L<<0, key_press_hook, graph);
 	mlx_hook(graph->win, 3, 1L<<1, key_release_hook, graph);
 	mlx_loop_hook(graph->mlx, move_loop, graph);

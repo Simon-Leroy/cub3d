@@ -9,6 +9,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
+# include <string.h>
 
 # define W_KEY 119
 # define S_KEY 115
@@ -29,6 +30,8 @@
 # define HEIGHT (16 * 32)
 
 # define FOV (60.0f * DR)
+
+# define DOF 100
 
 typedef struct s_player
 {
@@ -52,20 +55,24 @@ typedef struct s_player
 
 typedef struct s_ray
 {
-	float	dof;
-	float	ra;
-	float	rx;
-	float	ry;
-	float	xo;
-	float	yo;
+	double	dof;
+	double	ra;
+	double	rx;
+	double	ry;
+	double	xo;
+	double	yo;
 	int		mx;
 	int		my;
-	float	hx;
-	float	hy;
-	float	vx;
-	float	vy;
-	float	distH;
-	float	distV;
+	double	hx;
+	double	hy;
+	double	vx;
+	double	vy;
+	double	hit_x;
+	double	hit_y;
+	double	distH;
+	double	distV;
+	int		side;
+	int		wall_cardinal;
 }	t_ray;
 
 /*
@@ -89,6 +96,17 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
+typedef struct s_tex
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+	int		width;
+	int		height;
+}	t_tex;
+
 
 typedef struct s_graph
 {
@@ -97,6 +115,8 @@ typedef struct s_graph
 	void	*square;
 	void	*wall;
 	char	**map;
+	t_tex		tex[4];
+	char	*tex_path[4];
 	t_player	*player;
 	t_img		img;
 	size_t	height;
@@ -126,9 +146,9 @@ int handle_rotation(t_player *player);
 
 void	update_direction_vectors(t_player *player);
 
-void	cast_test_horizontal_ray(t_graph *graph, t_player *player, float ra);
+void	cast_test_horizontal_ray(t_graph *graph, t_player *player, double ra);
 
-void cast_ray(t_graph *graph, t_player *player, float ra);
+void cast_ray(t_graph *graph, t_player *player, double ra);
 
 // raycaster.c
 
@@ -140,12 +160,16 @@ void	hit_h_wall(t_ray *ray, t_graph *graph, t_player *player);
 void	init_vertical_ray(t_ray *ray, t_player *player);
 void	hit_v_wall(t_ray *ray, t_graph *graph, t_player *player);
 
-float	normalise_angle(float angle);
-float	dist(float ax, float ay, float bx, float by);
+double	normalise_angle(double angle);
+double	dist(double ax, double ay, double bx, double by);
 
 // render
 void	ft_pixel_put(t_img *img, int x, int y, int color);
 
 void	init_image(t_graph *graph);
 int		render_frame(t_graph *graph);
+
+int		get_pixel_tex(t_tex *tex, int x, int y);
+int		load_texture(void *mlx, t_tex *tex, char *path);
+
 #endif
