@@ -17,6 +17,7 @@
 # define D_KEY 100
 # define X_LEFT 65361
 # define X_RIGHT 65363
+# define X_ESC 65307
 
 # define IMG_PX 32
 
@@ -174,5 +175,7 @@ int		load_texture(void *mlx, t_tex *tex, char *path);
 
 int	set_player(t_graph *graph, t_player *player);
 int	get_player_position(t_graph *graph, t_player *player);
+
+int	init_player(t_graph *graph, t_player *player);
 
 #endif

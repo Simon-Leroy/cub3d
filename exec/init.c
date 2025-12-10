@@ -49,3 +49,22 @@ int	set_player(t_graph *graph, t_player *player)
 	}
 	return (0);
 }
+
+int	init_player(t_graph *graph, t_player *player)
+{
+	if (!graph || !player)
+		return (0);
+	graph->player = player;
+	player->radius = 10;
+	player->rotation_speed = 0.01;
+	player->move_speed = 0.8;
+	player->is_looking_left = 0;
+	player->is_looking_right = 0;
+	player->is_moving_backward = 0;
+	player->is_moving_forward = 0;
+	player->is_moving_left = 0;
+	player->is_moving_right = 0;
+	if (!set_player(graph, player))
+		return (0);
+	return (1);
+}

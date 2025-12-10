@@ -11,6 +11,8 @@ int	key_press_hook(int key, t_graph *graph)
 	t_player	*player;
 
 	player = graph->player;
+	if (key == X_ESC)
+		exit_game(graph);
 	if (key == W_KEY)
 		player->is_moving_forward = 1;
 	if (key == S_KEY)
