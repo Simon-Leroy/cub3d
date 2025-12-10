@@ -3,7 +3,7 @@
 
 
 # include "minilibx/mlx.h"
-# include "get_next_line/get_next_line.h"
+# include "../get_next_line/get_next_line.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -171,5 +171,8 @@ int		render_frame(t_graph *graph);
 
 int		get_pixel_tex(t_tex *tex, int x, int y);
 int		load_texture(void *mlx, t_tex *tex, char *path);
+
+int	set_player(t_graph *graph, t_player *player);
+int	get_player_position(t_graph *graph, t_player *player);
 
 #endif

@@ -22,9 +22,9 @@ int main()
 	graph->player = player;
 	player->radius = 10;
 	player->rotation_speed = 0.01;
-	player->px = 2 * IMG_PX + player->radius;
+/* 	player->px = 2 * IMG_PX + player->radius;
 	player->py = 2 * IMG_PX + player->radius;
-	player->pa = PI / 3; // attention problème de boucle infinie avec le raycasting
+	player->pa = PI / 3; // attention problème de boucle infinie avec le raycasting */
 	player->move_speed = 0.8;
 
 	graph->tex_path[0] = strdup("assets/north.xpm");
@@ -39,7 +39,7 @@ int main()
 
 	graph->wall = mlx_xpm_file_to_image(graph->mlx, "assets/walls.xpm", &size, &size);
 	graph->map = create_map_grid("map.cub");
-
+	set_player(graph, player);
 	mlx_hook(graph->win, 2, 1L<<0, key_press_hook, graph);
 	mlx_hook(graph->win, 3, 1L<<1, key_release_hook, graph);
 	mlx_loop_hook(graph->mlx, move_loop, graph);

@@ -1,7 +1,8 @@
 NAME = cub3d
 
-SRCFILES =	get_next_line/get_next_line_utils.c \
-			get_next_line/get_next_line.c \
+SRCFILES =	../get_next_line/get_next_line_utils.c \
+			../get_next_line/get_next_line.c \
+			init.c \
 			map_grid.c \
 			camera.c \
 			display.c \
