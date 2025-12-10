@@ -13,3 +13,8 @@ double	normalise_angle(double angle)
 		angle -= 2 * PI;
 	return angle;
 }
+
+int	rgb_to_int(int r, int g, int b)
+{
+	return ((r << 16) | (g << 8) | b);
+}
