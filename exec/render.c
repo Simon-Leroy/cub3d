@@ -1,4 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 13:55:38 by sleroy            #+#    #+#             */
+/*   Updated: 2025/12/18 11:11:54 by sleroy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/exec.h"
 
 /*
 mlx_new_image alloue une image en mémoire de dimension
@@ -8,15 +20,16 @@ void	init_image(t_graph *graph)
 {
 	if (!graph->mlx)
 		return ;
-	graph->img.img_ptr = mlx_new_image(graph->mlx, WIDTH, HEIGHT);
+	graph->img.img_ptr = mlx_new_image(graph->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!graph->img.img_ptr)
 		return ;
 	graph->img.data_addr = mlx_get_data_addr(
-		graph->img.img_ptr,
-		&graph->img.bits_per_pixel,
-		&graph->img.line_len,
-		&graph->img.endian);
+			graph->img.img_ptr,
+			&graph->img.bits_per_pixel,
+			&graph->img.line_len,
+			&graph->img.endian);
 }
+
 /*
 Fonction pour dessiner un pixel à la position (x, y) dans l'image
 mlx
@@ -27,16 +40,18 @@ img->data_addr = adresse du début du buffer de pixels
 + x * (img->bits_per_pixel / 8) -> atteint le pixel x de la ligne y
 *(unsigned int*)dst = color -> écrit la couleur dans ce pixel
  */
-void ft_pixel_put(t_img *img, int x, int y, int color)
+void	ft_pixel_put(t_img *img, int x, int y, int color)
 {
 	char	*dst;
 
-	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+	if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
 	{
-		dst = img->data_addr + (y * img->line_len + x * (img->bits_per_pixel / 8));
-		*(unsigned int*)dst = color;
+		dst = img->data_addr
+			+ (y * img->line_len + x * (img->bits_per_pixel / 8));
+		*(unsigned int *)dst = color;
 	}
 }
+
 /*
 Fonction de render
 cast_ray fait le raycasting et met les pixels dans une image

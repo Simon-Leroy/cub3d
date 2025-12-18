@@ -1,5 +1,21 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 14:09:37 by sleroy            #+#    #+#             */
+/*   Updated: 2025/12/18 11:12:54 by sleroy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../include/exec.h"
+
+/*
+Fonction pour détruire toutes les textures qui ont été préalablement
+chargées dans la mlx : vérification de chargement avant de détruire
+ */
 void	destroy_textures(t_graph *graph)
 {
 	int	i;
@@ -16,6 +32,10 @@ void	destroy_textures(t_graph *graph)
 	}
 }
 
+/*
+Fonction pour libérer la mémoire de tous les chemins d'accès vers
+les textures
+ */
 void	free_texture_paths(t_graph *graph)
 {
 	int	i;
@@ -29,26 +49,39 @@ void	free_texture_paths(t_graph *graph)
 	}
 }
 
-void	free_map(char **map)
-{
-	int	i;
+/*
+Fonction pour libérer la mémoire allouée pour la map
+*/
+// void	free_map(char **map)
+// {
+// 	int	i;
 
-	i = 0;
-	while (map[i])
-		free(map[i++]);
-	free(map);
-}
+// 	i = 0;
+// 	while (map[i])
+// 		free(map[i++]);
+// 	free(map);
+// }
 
+/*
+Fonction qui libère la mémoire et détruit la mlx à la fin
+du programme ou en cas d'échec du programme
+*/
 int	exit_game(t_graph *graph)
 {
 	destroy_textures(graph);
 	free_texture_paths(graph);
-	free_map(graph->map);
+	if (graph->map)
+		free_map(graph->map);
+	if (graph->player)
+		free(graph->player);
 	mlx_destroy_image(graph->mlx, graph->img.img_ptr);
 	mlx_destroy_window(graph->mlx, graph->win);
-	mlx_destroy_display(graph->mlx);
-	free(graph->mlx);
-	free(graph->player);
-	free(graph);
+	if (graph->mlx)
+	{
+		mlx_destroy_display(graph->mlx);
+		free(graph->mlx);
+	}
+	if (graph)
+		free(graph);
 	exit(0);
 }

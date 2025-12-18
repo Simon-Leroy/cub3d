@@ -1,49 +1,84 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alandel <alandel@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 14:32:50 by sleroy            #+#    #+#             */
+/*   Updated: 2025/12/18 11:56:25 by alandel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int main()
+#include "../include/exec.h"
+#include "../include/parsing.h"
+
+void	data_in_graph(t_data *data, t_graph *graph)
 {
-	t_graph	*graph;
-	t_player *player;
-	int		size;
+	graph->tex_path[0] = data->tex_so;
+	graph->tex_path[1] = data->tex_no;
+	graph->tex_path[2] = data->tex_ea;
+	graph->tex_path[3] = data->tex_we;
+	graph->map = data->map;
+	graph->ceil_color = data->ceil_color;
+	graph->floor_color = data->floor_color;
+	graph->width = data->map_w;
+	graph->height = data->map_h;
+	graph->dir = data->dir;
+}
 
-	size = 32;
+int	check_all(t_data *data, char **av)
+{
+	if (!check_arg(av[1]))
+		return (0);
+	if (!save_map(av[1], data))
+		return (0);
+	if (!valid_map(data))
+		return (0);
+	return (1);
+}
 
+int	init_exec(t_data *data, t_graph *graph, t_player *player)
+{
+	graph->mlx = mlx_init();
+	if (!graph->mlx)
+		return (write_error("Error\nmlx_init() failed\n"), 0);
+	graph->win = mlx_new_window(graph->mlx,
+			SCREEN_WIDTH, SCREEN_HEIGHT, "CUB3D");
+	data_in_graph(data, graph);
+	init_image(graph);
+	init_player(data, graph, player);
+	if (!load_all_textures(graph))
+		return (destroy_textures(graph), 0);
+	graph->player = player;
+	return (1);
+}
+
+int	main(int argc, char **av)
+{
+	t_graph		*graph;
+	t_player	*player;
+	t_data		data;
+
+	if (argc != 2)
+		return (write_error("Error\nMissing map file argument\n"), 1);
+	init_data(&data);
+	if (!check_all(&data, av))
+		return (free_data(&data), 1);
 	graph = malloc(sizeof(t_graph));
 	if (!graph)
-		return (1);
-	graph->mlx = mlx_init();
-	graph->win = mlx_new_window(graph->mlx, 30 * IMG_PX, 16 * IMG_PX, "CUB3D");
-/* 	graph->square = mlx_xpm_file_to_image(graph->mlx, "assets/square.xpm", &size, &size); */
-	init_image(graph);
-
-	graph->tex_path[0] = strdup("assets/north.xpm");
-	graph->tex_path[1] = strdup("assets/south.xpm");
-	graph->tex_path[2] = strdup("assets/east.xpm");
-	graph->tex_path[3] = strdup("assets/west.xpm");
-	for (int i = 0; i < 4; i++)
-	{
-		if (load_texture(graph->mlx, &graph->tex[i], graph->tex_path[i]))
-			printf("Erreur chargement texture %s\n", graph->tex_path[i]);
-	}
-
-/* 	graph->wall = mlx_xpm_file_to_image(graph->mlx, "assets/walls.xpm", &size, &size); */
-	graph->map = create_map_grid("map.cub");
+		return (write_error("Error malloc graph\n"), 1);
 	player = malloc(sizeof(t_player));
 	if (!player)
+		return (write_error("Error malloc player\n"), 1);
+	if (!init_exec(&data, graph, player))
 		return (1);
-	if (!init_player(graph, player))
-	{
-		printf("Could not initialize player\n");
-		return (1);
-	}
-	mlx_hook(graph->win, 2, 1L<<0, key_press_hook, graph);
-	mlx_hook(graph->win, 3, 1L<<1, key_release_hook, graph);
+	mlx_hook(graph->win, 2, 1L << 0, key_press_hook, graph);
+	mlx_hook(graph->win, 3, 1L << 1, key_release_hook, graph);
 	mlx_loop_hook(graph->mlx, move_loop, graph);
 	mlx_hook(graph->win, 17, 0, exit_game, graph);
 	update_direction_vectors(player);
 	render_frame(graph);
-//	redraw_display(graph, player);
 	mlx_loop(graph->mlx);
-	exit_game(graph);
-	return 0;
+	return (0);
 }

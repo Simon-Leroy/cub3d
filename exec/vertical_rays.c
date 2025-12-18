@@ -1,6 +1,18 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vertical_rays.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/11 13:53:47 by sleroy            #+#    #+#             */
+/*   Updated: 2025/12/18 11:11:54 by sleroy           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-double get_ntan(double ra)
+#include "../include/exec.h"
+
+float	get_ntan(float ra)
 {
 	if (ra == PI)
 		return (0);
@@ -11,7 +23,7 @@ double get_ntan(double ra)
 
 void	init_vertical_ray(t_ray *r, t_player *p)
 {
-	double	nTan;
+	float	n_tan;
 
 	r->dof = 0;
 	if (r->ra == PI || r->ra == 2 * PI)
@@ -19,36 +31,37 @@ void	init_vertical_ray(t_ray *r, t_player *p)
 		r->dof = DOF;
 		return ;
 	}
-	nTan = get_ntan(r->ra);
+	n_tan = get_ntan(r->ra);
 	if (r->ra > P2 && r->ra < P3)
 	{
 		r->rx = ((int)(p->px / IMG_PX) * IMG_PX) - 0.0001f;
-		r->ry = (p->px - r->rx) * nTan + p->py;
+		r->ry = (p->px - r->rx) * n_tan + p->py;
 		r->xo = -IMG_PX;
-		r->yo = -r->xo * nTan;
+		r->yo = -r->xo * n_tan;
 	}
 	else
 	{
 		r->rx = ((int)(p->px / IMG_PX) * IMG_PX) + IMG_PX;
-		r->ry = (p->px - r->rx) * nTan + p->py;
+		r->ry = (p->px - r->rx) * n_tan + p->py;
 		r->xo = IMG_PX;
-		r->yo = -r->xo * nTan;
+		r->yo = -r->xo * n_tan;
 	}
 }
 
-void hit_v_wall(t_ray *r, t_graph *graph, t_player *p)
+void	hit_v_wall(t_ray *r, t_graph *graph, t_player *p)
 {
 	while (r->dof < DOF)
 	{
 		r->mx = (int)(r->rx / IMG_PX);
 		r->my = (int)(r->ry / IMG_PX);
-		if (r->mx < 0 || r->my < 0 || r->mx >= 30 || r->my >= 16)
-			break;
+		if (r->mx < 0 || r->my < 0
+			|| r->mx >= graph->width || r->my >= graph->height)
+			break ;
 		if (graph->map[r->my][r->mx] == '1')
 		{
 			r->vx = r->rx;
 			r->vy = r->ry;
-			r->distV = dist(p->px, p->py, r->vx, r->vy);
+			r->dist_v = dist(p->px, p->py, r->vx, r->vy);
 			r->dof = DOF;
 		}
 		else
