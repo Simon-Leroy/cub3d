@@ -6,7 +6,7 @@
 /*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 14:11:00 by sleroy            #+#    #+#             */
-/*   Updated: 2025/12/18 15:19:28 by sleroy           ###   ########.fr       */
+/*   Updated: 2025/12/18 11:11:54 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	load_all_textures(t_graph *graph)
 	i = 0;
 	while (i < 4)
 	{
-		if (load_texture(graph->mlx, &graph->tex[i], graph->tex_path[i]))
+		if (!load_texture(graph->mlx, &graph->tex[i], graph->tex_path[i]))
 		{
 			write_error("Error loading texture ");
 			write_error(graph->tex_path[i]);

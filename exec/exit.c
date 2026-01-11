@@ -6,7 +6,7 @@
 /*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 14:09:37 by sleroy            #+#    #+#             */
-/*   Updated: 2025/12/18 11:12:54 by sleroy           ###   ########.fr       */
+/*   Updated: 2026/01/11 20:27:36 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,10 @@ int	exit_game(t_graph *graph)
 		free_map(graph->map);
 	if (graph->player)
 		free(graph->player);
-	mlx_destroy_image(graph->mlx, graph->img.img_ptr);
-	mlx_destroy_window(graph->mlx, graph->win);
+	if (graph->img.img_ptr)
+		mlx_destroy_image(graph->mlx, graph->img.img_ptr);
+	if (graph->win)
+		mlx_destroy_window(graph->mlx, graph->win);
 	if (graph->mlx)
 	{
 		mlx_destroy_display(graph->mlx);

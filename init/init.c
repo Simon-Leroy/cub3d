@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alandel <alandel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 10:35:33 by alandel           #+#    #+#             */
-/*   Updated: 2025/12/18 11:53:22 by alandel          ###   ########.fr       */
+/*   Updated: 2026/01/11 20:23:39 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	free_data(t_data *data)
 int	print_error(const char *msg)
 {
 	get_next_line(-1);
-	write(2, msg, ft_strlen(msg));
+	if (write(2, msg, ft_strlen(msg)))
+		return (1);
 	return (0);
 }
 

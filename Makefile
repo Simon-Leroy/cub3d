@@ -1,4 +1,4 @@
-NAME = cub3D
+NAME = Cub3d
 
 SRCFILES =	libft/gnl/get_next_line_utils.c \
 			libft/gnl/get_next_line.c \
