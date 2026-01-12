@@ -6,7 +6,7 @@
 /*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 11:50:47 by alandel           #+#    #+#             */
-/*   Updated: 2026/01/11 20:19:02 by sleroy           ###   ########.fr       */
+/*   Updated: 2026/01/06 14:30:44 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 
 # define IMG_PX 32
 
-# define SCREEN_WIDTH 1920
-# define SCREEN_HEIGHT 1080
+# define SCREEN_WIDTH 1080
+# define SCREEN_HEIGHT 720
 
 # define PI M_PI
 # define P2 M_PI_2

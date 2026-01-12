@@ -6,7 +6,7 @@
 /*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 14:02:23 by sleroy            #+#    #+#             */
-/*   Updated: 2026/01/11 20:32:04 by sleroy           ###   ########.fr       */
+/*   Updated: 2026/01/06 14:28:14 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	init_player(t_data *data, t_graph *graph, t_player *player)
 	if (!graph || !player)
 		return (0);
 	graph->player = player;
-	player->radius = IMG_PX / 4;
+	player->radius = IMG_PX / 3;
 	player->rotation_speed = ROTATION_SPEED;
 	player->move_speed = MOVE_SPEED;
 	player->is_looking_left = 0;
