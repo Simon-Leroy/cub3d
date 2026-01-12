@@ -6,7 +6,7 @@
 /*   By: sleroy <sleroy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 14:32:50 by sleroy            #+#    #+#             */
-/*   Updated: 2026/01/06 13:59:03 by sleroy           ###   ########.fr       */
+/*   Updated: 2026/01/12 11:32:42 by sleroy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	main(int argc, char **av)
 	t_data		data;
 
 	if (argc != 2)
-		return (write_error("Error\nMissing map file argument\n"), 1);
+		return (write_error("Error\nWrong number of arguments\n"), 1);
 	init_data(&data);
 	if (!check_all(&data, av))
 		return (free_data(&data), 1);
