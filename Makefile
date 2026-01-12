@@ -31,7 +31,7 @@ SRCFILES =	libft/gnl/get_next_line_utils.c \
 			parsing/parse_map.c
 
 OBJDIR = obj
-OBJFILES = $(addprefix $(OBJDIR)/, $(SRCFILES:.c=.o))
+OBJFILES = $(SRCFILES:%.c=$(OBJDIR)/%.o)
 
 CFLAGS = -Wall -Wextra -Werror -g3 -O3 -ffast-math
 
@@ -52,7 +52,7 @@ $(NAME): $(OBJFILES)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJFILES) $(MLXLIB) $(MLXFLAGS) $(LIBFT_FLAGS)
 
 $(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
