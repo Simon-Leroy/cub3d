@@ -1,2 +1,21 @@
-*.vscode
+# Build output
+obj/
+*.o
+*.a
+Cub3d
+
+# Executables / dumps
 *.out
+core
+core.*
+
+# Editors
+.vscode/
+*.swp
+.idea/
+
+# OS
+.DS_Store
+
+# Valgrind
+*.log

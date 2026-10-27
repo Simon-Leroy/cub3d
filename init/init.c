@@ -59,7 +59,8 @@ void	free_data(t_data *data)
 int	print_error(const char *msg)
 {
 	get_next_line(-1);
-	write(2, msg, ft_strlen(msg));
+	if (write(2, msg, ft_strlen(msg)) < 0)
+		return (0);
 	return (0);
 }
 
